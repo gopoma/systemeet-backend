@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import config from "./config";
+import doDBConnection from "./db";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
@@ -18,9 +19,15 @@ class Server {
     constructor() {
         this.app = express();
         this.port = config.port;
+    }
+
+    public async bootstrap() {
+        await doDBConnection();
 
         this.middlewares();
         this.routes();
+
+        this.listen();
     }
 
     private middlewares() {
@@ -50,8 +57,9 @@ class Server {
         this.app.use(this.apiPaths.auth, authRoutes);
     }
 
-    public listen() {
+    private listen() {
         this.app.listen(this.port, () => {
+            // eslint-disable-next-line
             console.log(`Server listening on port ${this.port}`);
         });
     }
