@@ -4,7 +4,10 @@ import doDBConnection from "./db";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
-import { authRoutes } from "./routes";
+import {
+    authRoutes,
+    userRoutes
+} from "./routes";
 
 class Server {
     private app: Application;
@@ -55,6 +58,7 @@ class Server {
             });
         });
         this.app.use(this.apiPaths.auth, authRoutes);
+        this.app.use(this.apiPaths.users, userRoutes);
     }
 
     private listen() {
