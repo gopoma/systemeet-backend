@@ -1,14 +1,11 @@
 import { Router } from "express";
 import { UserController } from "../controllers";
-import { checkSchema } from "express-validator";
-import {
-    CreateUserSchema
-} from "../schemas";
-import { validateFields } from "../middlewares";
+
+import { createUserDTO } from "../dtos";
 
 const router = Router();
 
-router.post("/", checkSchema(CreateUserSchema), validateFields, UserController.create);
+router.post("/", createUserDTO, UserController.create);
 router.get("/", UserController.getAll);
 router.get("/:idUser", UserController.get);
 router.patch("/:idUser", UserController.edit);

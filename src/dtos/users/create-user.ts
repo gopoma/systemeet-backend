@@ -1,22 +1,52 @@
-class CreateUserDTO {
-    public readonly firstName: string;
-    public readonly lastName: string;
-    public readonly email: string;
-    public readonly password: string;
-    public readonly role?: string;
-    public readonly birthday: Date;
-    public readonly gender?: string;
+import { Type } from "@sinclair/typebox";
+import Ajv from "ajv";
+import addErrors from "ajv-errors";
+import addFormats from "ajv-formats";
+import { Request, Response, NextFunction } from "express";
+import {
+    firstNameDTOSchema,
+    lastNameDTOSchema,
+    emailDTOSchema,
+    passwordDTOSchema,
+    birthdayDTOSchema,
+} from "./dto-types";
 
-    // eslint-disable-next-line
-    constructor(body: any) {
-        this.firstName = body.firstName;
-        this.lastName = body.lastName;
-        this.email = body.email;
-        this.password = body.password;
-        this.role = body.role;
-        this.birthday = body.birthday;
-        this.gender = body.gender;
+const CreateUserDTOSchema = Type.Object(
+    {
+        firstName: firstNameDTOSchema,
+        lastName: lastNameDTOSchema,
+        email: emailDTOSchema,
+        password: passwordDTOSchema,
+        birthday: birthdayDTOSchema,
+    },
+    {
+        additionalProperties: false,
+        errorMessage: {
+            additionalProperties: "El formato del objeto no es válido",
+        }
     }
-}
+);
 
-export default CreateUserDTO;
+const ajv = new Ajv({ allErrors: true })
+    .addKeyword("kind")
+    .addKeyword("modifier");
+
+ajv.addFormat("password", /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/);
+addFormats(ajv, ["email"]);
+addErrors(ajv);
+
+const validateSchema = ajv.compile(CreateUserDTOSchema);
+
+const createUserDTO = (req: Request, res: Response, next: NextFunction) => {
+    const isDTOValid = validateSchema(req.body);
+
+    if (!isDTOValid) {
+        return res.status(400).send({
+            errors: validateSchema?.errors?.map((error) => error.message),
+        });
+    }
+
+    next();
+};
+
+export default createUserDTO;

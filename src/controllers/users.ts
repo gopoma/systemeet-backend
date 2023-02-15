@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import { UserService } from "../services";
-import { CreateUserDTO } from "../dtos";
 
 class UserController {
     public static async create(req: Request, res: Response) {
-        const data = new CreateUserDTO(req.body);
-        const result = await UserService.create(data);
+        console.log(req.body);
 
-        return res.status(201).json(result);
+        return res.status(201).json(req.body);
     }
 
     public static async getAll(req: Request, res: Response) {
