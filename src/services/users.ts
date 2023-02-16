@@ -11,10 +11,21 @@ class UserService {
     public static async create(data: CreateUserDTO) {
         try {
             const user: HydratedDocument<IUser> = await UserModel.create(data);
+            const userWithNonSensitiveData = {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                displayName: user.displayName,
+                email: user.email,
+                role: user.role,
+                birthday: user.birthday,
+                gender: user.gender,
+            };
+
 
             return {
                 success: true,
-                user
+                user: userWithNonSensitiveData
             };
         } catch(error) {
             return handleDBExceptions(error as Error);

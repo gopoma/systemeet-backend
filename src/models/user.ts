@@ -4,7 +4,7 @@ import { encrypt } from "../libs";
 
 
 export interface IUser {
-    id: mongoose.Schema.Types.ObjectId,
+    _id: mongoose.Types.ObjectId,
     firstName: string,
     lastName: string,
     displayName: string,
@@ -48,7 +48,9 @@ const userSchema = new mongoose.Schema<IUser>({
     displayName: String,
     email: {
         type: String,
+        trim: true,
         required: true,
+        lowercase: true,
         unique: true
     },
     password: {

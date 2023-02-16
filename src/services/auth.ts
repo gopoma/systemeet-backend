@@ -16,9 +16,7 @@ class AuthService {
             }
 
 
-            return {
-                ...result
-            };
+            return { ...result };
         } catch(error) {
             handleDBExceptions(error as Error);
         }

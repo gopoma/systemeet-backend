@@ -4,7 +4,7 @@ import { Type } from "@sinclair/typebox";
 export const firstNameDTOSchema = Type.String({
     isNotEmpty: true,
     maxLength: 255,
-    transform: ["trim", "toLowerCase"],
+    transform: ["trim"],
     errorMessage: {
         type: "firstName debe de ser del tipo texto",
         isNotEmpty: "firstName no debe estar vacío",
@@ -15,7 +15,7 @@ export const firstNameDTOSchema = Type.String({
 export const lastNameDTOSchema = Type.String({
     isNotEmpty: true,
     maxLength: 255,
-    transform: ["trim", "toLowerCase"],
+    transform: ["trim"],
     errorMessage: {
         type: "lastName debe de ser del tipo texto",
         isNotEmpty: "lastName no debe estar vacío",
