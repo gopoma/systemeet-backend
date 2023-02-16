@@ -2,7 +2,41 @@ import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import { encrypt } from "../libs";
 
-const userSchema = new mongoose.Schema({
+
+export interface IUser {
+    id: mongoose.Schema.Types.ObjectId,
+    firstName: string,
+    lastName: string,
+    displayName: string,
+    email: string,
+    password: string,
+    role: string,
+    birthday: Date,
+    gender: string,
+    profilePicture?: string,
+    isEmailValid: boolean,
+    emailValidationUUID?: string,
+    emailValidationUUIDExpiration?: Date,
+    provider: Provider,
+    idProvider: IdProvider
+}
+
+interface Provider {
+    local: boolean,
+    facebook: boolean,
+    google: boolean,
+    twitter: boolean,
+    github: boolean,
+}
+
+interface IdProvider {
+    facebook: string,
+    google: string,
+    twitter: string,
+    github: string
+}
+
+const userSchema = new mongoose.Schema<IUser>({
     firstName: {
         type: String,
         required: true
@@ -81,5 +115,4 @@ userSchema.pre("save", async function(next) {
     return next();
 });
 
-const UserModel = mongoose.model("user", userSchema);
-export default UserModel;
+export const UserModel = mongoose.model<IUser>("user", userSchema);

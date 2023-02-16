@@ -1,7 +1,7 @@
 import { Error } from "mongoose";
 
 
-type ErrorResponse = {
+export type ErrorResponse = {
     success: boolean;
     messages: string[]
 };

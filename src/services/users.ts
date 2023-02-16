@@ -1,14 +1,16 @@
 import { UserModel } from "../models";
-import { Error } from "mongoose";
+import { Error, HydratedDocument } from "mongoose";
 import { handleDBExceptions } from "../helpers";
 import {
     CreateUserDTO
 } from "../dtos";
+import { IUser } from "../models/user";
+
 
 class UserService {
     public static async create(data: CreateUserDTO) {
         try {
-            const user = await UserModel.create(data);
+            const user: HydratedDocument<IUser> = await UserModel.create(data);
 
             return {
                 success: true,
