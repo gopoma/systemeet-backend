@@ -1,52 +1,40 @@
-import { Type } from "@sinclair/typebox";
-import Ajv from "ajv";
-import addErrors from "ajv-errors";
-import addFormats from "ajv-formats";
-import { Request, Response, NextFunction } from "express";
+import { Static, Type } from "@sinclair/typebox";
 import {
     firstNameDTOSchema,
     lastNameDTOSchema,
     emailDTOSchema,
     passwordDTOSchema,
+    roleDTOSchema,
     birthdayDTOSchema,
-} from "./dto-types";
+    genderDTOSchema
+} from "./types";
 
-const CreateUserDTOSchema = Type.Object(
+
+export const CreateUserDTOSchema = Type.Object(
     {
         firstName: firstNameDTOSchema,
         lastName: lastNameDTOSchema,
         email: emailDTOSchema,
         password: passwordDTOSchema,
+        role: Type.Optional(roleDTOSchema),
         birthday: birthdayDTOSchema,
+        gender: Type.Optional(genderDTOSchema)
     },
     {
         additionalProperties: false,
         errorMessage: {
-            additionalProperties: "El formato del objeto no es válido",
+            type: "Es necesario mandar un objeto",
+            additionalProperties: "No proporciones más propiedades de las necesarias",
+            required: {
+                firstName: "Proporcione firstName",
+                lastName: "Proporcione lastName",
+                email: "Proporcione email",
+                password: "Proporcione password",
+                birthday: "Proporcione birthday"
+            }
         }
     }
 );
 
-const ajv = new Ajv({ allErrors: true })
-    .addKeyword("kind")
-    .addKeyword("modifier");
 
-ajv.addFormat("password", /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/);
-addFormats(ajv, ["email"]);
-addErrors(ajv);
-
-const validateSchema = ajv.compile(CreateUserDTOSchema);
-
-const createUserDTO = (req: Request, res: Response, next: NextFunction) => {
-    const isDTOValid = validateSchema(req.body);
-
-    if (!isDTOValid) {
-        return res.status(400).send({
-            errors: validateSchema?.errors?.map((error) => error.message),
-        });
-    }
-
-    next();
-};
-
-export default createUserDTO;
+export type CreateUserDTO = Static<typeof CreateUserDTOSchema>

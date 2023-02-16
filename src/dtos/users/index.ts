@@ -1,1 +1,1 @@
-export { default as createUserDTO } from "./create-user";
+export * from "./create-user";

@@ -3,16 +3,15 @@ import { UserService } from "../services";
 
 class UserController {
     public static async create(req: Request, res: Response) {
-        console.log(req.body);
+        const result = await UserService.create(req.body);
 
-        return res.status(201).json(req.body);
+        return res.status(result.success ? 201 : 400).json(result);
     }
 
     public static async getAll(req: Request, res: Response) {
-        return res.status(200).json({
-            success: true,
-            message: "Sending all users"
-        });
+        const result = await UserService.getAll();
+
+        return res.status(result.success ? 200 : 500).json(result);
     }
 
     public static async get(req: Request, res: Response) {

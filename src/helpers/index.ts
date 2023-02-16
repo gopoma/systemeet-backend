@@ -1,1 +1,1 @@
-export { default as handleDBExceptions } from "./handleDBExceptions";
+export * from "./handleDBExceptions";

@@ -11,7 +11,7 @@ const validateNotEmpty = (cxt: KeywordCxt) => {
     }
 };
 
-export const createAjv = () => {
+export const createAjv = (): Ajv => {
     const ajv = new Ajv({ allErrors: true })
         .addKeyword("kind")
         .addKeyword("modifier")
