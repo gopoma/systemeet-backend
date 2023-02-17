@@ -4,7 +4,6 @@ import { encrypt } from "../libs";
 
 
 export interface IUser {
-    _id: mongoose.Types.ObjectId,
     firstName: string,
     lastName: string,
     displayName: string,
@@ -59,10 +58,8 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     role: {
         type: String,
-        enum: {
-            values: ["REGULAR", "ADMIN"],
-            default: "REGULAR"
-        }
+        enum: ["REGULAR", "ADMIN"],
+        default: "REGULAR"
     },
     birthday: {
         type: Date,
@@ -70,10 +67,8 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     gender: {
         type: String,
-        enum: {
-            values: ["MALE", "FEMALE", "NOT_SPECIFIED"],
-            default: "NOT_SPECIFIED"
-        },
+        enum: ["MALE", "FEMALE", "NOT_SPECIFIED"],
+        default: "NOT_SPECIFIED"
     },
     profilePicture: String,
     isEmailValid: {

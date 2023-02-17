@@ -44,6 +44,11 @@ class UserService {
             return handleDBExceptions(error as Error);
         }
     }
+
+    public static async getByEmail(email: string) {
+        const user = await UserModel.findOne({ email });
+        return user;
+    }
 }
 
 export default UserService;
