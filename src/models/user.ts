@@ -4,6 +4,7 @@ import { encrypt } from "../libs";
 
 
 export interface IUser {
+    id: string,
     firstName: string,
     lastName: string,
     displayName: string,

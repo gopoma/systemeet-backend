@@ -1,14 +1,14 @@
 import { HydratedDocument } from "mongoose";
-import jwt from "jsonwebtoken";
 
-import { IUser } from "../models";
-import { UserService } from "./";
-import { compare } from "../libs";
-import config from "../config";
 import {
     RegisterDTO,
     LoginDTO
 } from "../dtos";
+import { UserService } from "./";
+import { IUser } from "../models";
+import { compare } from "../libs";
+import { createToken } from "../helpers";
+import { AuthResult, ErrorResult, UserToTokenize } from "../interfaces";
 
 
 class AuthService {
@@ -24,7 +24,7 @@ class AuthService {
         return { ...result };
     }
 
-    public static async login(credentials: LoginDTO) {
+    public static async login(credentials: LoginDTO): Promise<AuthResult | ErrorResult> {
         const user = await UserService.getByEmail(credentials.email);
 
         if(!user) {
@@ -48,8 +48,8 @@ class AuthService {
         return AuthService.getUserData(user);
     }
 
-    private static getUserData(user: HydratedDocument<IUser>) {
-        const userToTokenize = {
+    private static getUserData(user: HydratedDocument<IUser>): AuthResult {
+        const userToTokenize: UserToTokenize = {
             id: user.id,
             displayName: user.displayName,
             email: user.email,
@@ -60,19 +60,12 @@ class AuthService {
         };
 
 
-        const token = AuthService.createToken(userToTokenize);
+        const token = createToken(userToTokenize);
         return {
             success: true,
             user: userToTokenize,
             token
         };
-    }
-
-    private static createToken(payload: object): string {
-        const token = jwt.sign(payload, config.secretJWTSeed as string, {
-            expiresIn: "7d"
-        });
-        return token;
     }
 }
 
