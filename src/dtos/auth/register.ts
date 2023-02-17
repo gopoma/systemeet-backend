@@ -35,4 +35,4 @@ export const RegisterDTOSchema = Type.Object(
 );
 
 
-export type RegisterDTO = Static<typeof RegisterDTOSchema>
+export type RegisterDTO = Static<typeof RegisterDTOSchema>;
